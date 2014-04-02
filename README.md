@@ -1,5 +1,5 @@
-org.ireas.intuition 0.1
-=======================
+org.ireas.intuition 1.0b
+========================
 
 [![Build Status](https://travis-ci.org/ireas/org.ireas.intuition.svg)](https://travis-ci.org/ireas/org.ireas.intuition)
 

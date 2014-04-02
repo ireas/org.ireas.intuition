@@ -20,7 +20,7 @@
  * tools.wmflabs.org}.  To change the Intuition installation to use, call the
  * {@code IntuitionLoader.setIntuitionUrl} method.
  * <p>
- * For more information about Intuition itself, see <a 
+ * For more information about Intuition itself, see <a
  * href="https://github.com/Krinkle/intuition/">Intuition on GitHub</a> and <a
  * href="https://tools.wmflabs.org/intuition/">Intuition on Wikimedia Labs</a>.
  */
