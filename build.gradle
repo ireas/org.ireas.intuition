@@ -1,0 +1,70 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'checkstyle'
+
+version = '0.1b'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.code.findbugs:jsr305:2.0.3'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.google.guava:guava:16.0.1'
+    compile 'org.apache.httpcomponents:httpclient:4.3.3'
+
+    testCompile 'junit:junit:4.+'
+}
+
+javadoc {
+  project.configure(options) {
+    memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+    links(
+    	"http://docs.oracle.com/javase/7/docs/api/",
+    	"http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/",
+    	"http://docs.guava-libraries.googlecode.com/git-history/release/javadoc/",
+    	"https://hc.apache.org/httpcomponents-core-ga/httpcore/apidocs/",
+        "https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/"
+    )
+  }
+}
+
+task javadocJar (type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+task sourceJar (type : Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+checkstyle {
+	sourceSets = [sourceSets.main]
+}
+
+task checkstyleReport << {
+	if (file("$buildDir/reports/checkstyle/${checkType}.xml").exists()) {
+		ant.xslt(
+			in: "$buildDir/reports/checkstyle/${checkType}.xml",
+			style: "config/checkstyle/checkstyle.xsl",
+			out: "$buildDir/reports/checkstyle/checkstyle_${checkType}.html"
+		)
+	}
+}
+ 
+gradle.taskGraph.afterTask {Task task, TaskState state ->
+	if(state.failure) {
+		if (task.name in ['checkstyleMain', 'checkstyleTest']) {
+			checkstyleReport {
+				def matcher = task.name =~ /^checkstyle(.*)$/
+				if (matcher.matches()) {
+					checkType = matcher.group(1).toLowerCase()
+				}
+			}
+			checkstyleReport.execute()
+		}
+	}
+}
+
