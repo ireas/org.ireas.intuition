@@ -1,2 +1,6 @@
 language: java
 
+env:
+    global:
+        - TERM=dumb
+
